@@ -1,4 +1,3 @@
-```markdown
 #  Autonomous Real-Time Anomaly Investigation Engine
 
 The **Autonomous Anomaly Engine** is an event-driven streaming pipeline that monitors live user behavior to detect fraud, bots, and system glitches in milliseconds. 
@@ -14,38 +13,8 @@ Unlike traditional batch-processing models that analyze "yesterday's data," this
 
 ## System Architecture
 
-```text
-[Python Data Simulator]
-       | (Generates live user events: logins, clicks, bots)
-       v
-+---------------------------------------------------+
-|              Apache Kafka (Topics)                |
-|   Topic 1: raw-user-events                        |
-|   Topic 2: flagged-anomalies                      |
-+---------------------------------------------------+
-       | (Consumes raw events)
-       v
-+---------------------------------------------------+
-|         Python ML Consumer (The Radar)            |
-| 1. Ingest event                                   |
-| 2. Extract features (velocity, frequency)         |
-| 3. Score via Isolation Forest (Unsupervised ML)   |
-| 4. IF NORMAL: Drop/Log                            |
-| 5. IF ANOMALY: Push to Topic 2 (flagged-anomalies)|
-+---------------------------------------------------+
-       | (Consumes flagged anomalies)
-       v
-+---------------------------------------------------+
-|         AI Agent Worker (The Investigator)        |
-| 1. Receives anomalous event                       |
-| 2. LLM analyzes: Is this a bot? A glitch?        |
-| 3. LLM generates JSON Incident Report            |
-| 4. Sends report to FastAPI via WebSockets         |
-+---------------------------------------------------+
-       |
-       v
-[Live FastAPI Dashboard / Browser]
-```
+![Architecturel-diagram](asset/Architecture_diagram.png)
+
 
 ## Tech Stack
 *   **Streaming Broker:** `Apache Kafka` (KRaft mode, no Zookeeper)
@@ -85,7 +54,4 @@ Unlike traditional batch-processing models that analyze "yesterday's data," this
 *   **Challenge:** The Isolation Forest model was flagging "slow humans" as anomalies because the feature `processing_time_ms` (0-3000) heavily outweighed the `action_code` (1-6).
     *   **Solution:** Implemented `StandardScaler` to normalize the feature space, ensuring the model weighed velocity and action type equally. Furthermore, the LLM Agent was introduced as a "Smart Triage" layer to distinguish between true bot anomalies (5ms) and false positive human anomalies (2500ms).
 *   **Challenge:** Kafka listeners inside Docker cannot use `localhost` to communicate between containers.
-    *   **Solution:** Configured `KAFKA_ADVERTISED_LISTENERS` to the Docker service name `kafka:9092` and updated all Python consumers to dynamically resolve the broker via environment variables.
-```
-
-
+    *   **Solution:** Configured `KAFKA_ADVERTISED_LISTENERS` to the Docker service name `kafka:9092` and updated all Python consumers to dynamically resolve the broker via environment variables
