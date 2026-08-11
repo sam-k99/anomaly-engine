@@ -1,4 +1,3 @@
-```markdown
 #  Autonomous Real-Time Anomaly Investigation Engine
 
 The **Autonomous Anomaly Engine** is an event-driven streaming pipeline that monitors live user behavior to detect fraud, bots, and system glitches in milliseconds. 
