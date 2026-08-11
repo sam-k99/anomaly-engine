@@ -1,5 +1,7 @@
 #  Autonomous Real-Time Anomaly Investigation Engine
 
+![dashboard](asset/overview02.png)
+
 The **Autonomous Anomaly Engine** is an event-driven streaming pipeline that monitors live user behavior to detect fraud, bots, and system glitches in milliseconds. 
 
 Unlike traditional batch-processing models that analyze "yesterday's data," this system ingests live clickstream data via Apache Kafka, scores it using an unsupervised machine learning model (Isolation Forest) in real-time, and triggers an **Autonomous LLM Agent** to investigate flagged anomalies, generate forensic reports, and recommend mitigation actions.
@@ -84,7 +86,5 @@ Unlike traditional batch-processing models that analyze "yesterday's data," this
 *   **Challenge:** The Isolation Forest model was flagging "slow humans" as anomalies because the feature `processing_time_ms` (0-3000) heavily outweighed the `action_code` (1-6).
     *   **Solution:** Implemented `StandardScaler` to normalize the feature space, ensuring the model weighed velocity and action type equally. Furthermore, the LLM Agent was introduced as a "Smart Triage" layer to distinguish between true bot anomalies (5ms) and false positive human anomalies (2500ms).
 *   **Challenge:** Kafka listeners inside Docker cannot use `localhost` to communicate between containers.
-    *   **Solution:** Configured `KAFKA_ADVERTISED_LISTENERS` to the Docker service name `kafka:9092` and updated all Python consumers to dynamically resolve the broker via environment variables.
-```
-
+    *   **Solution:** Configured `KAFKA_ADVERTISED_LISTENERS` to the Docker service name `kafka:9092` and updated all Python consumers to dynamically resolve the broker via environment variables
 
