@@ -1,6 +1,6 @@
 #  Autonomous Real-Time Anomaly Investigation Engine
 
-![dashboard](asset/overview02.png)
+![dashboard](asset/dashboard_overview.png)
 
 The **Autonomous Anomaly Engine** is an event-driven streaming pipeline that monitors live user behavior to detect fraud, bots, and system glitches in milliseconds. 
 
